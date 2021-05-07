@@ -1,3 +1,6 @@
+// space complexity - constant
+// works on leetcode
+
 class Solution {
     public int shipWithinDays(int[] weights, int D) {
         int low = 0;
