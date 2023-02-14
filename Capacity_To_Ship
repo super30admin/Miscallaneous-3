@@ -1,0 +1,39 @@
+//Timecomplexity.  O(sum-max)*O(n)
+//SpaceComplexity.  O(1)
+
+
+class Solution {
+    public int shipWithinDays(int[] weights, int days) {
+        int max = 0;
+        int sum = 0;
+
+        for(int num : weights){
+            max = Math.max(max,num);
+            sum += num;
+        }
+
+        int low = max;
+        int high = sum;
+
+        while(low <= high){
+
+            int mid = (low + high)/2;
+            int currWeight = 0;
+            int currDays = 1;
+
+            for(int i = 0 ; i < weights.length; i++){
+                if(currWeight + weights[i] > mid){
+                    currWeight = 0;
+                    currDays++;
+                }
+                currWeight += weights[i];
+            }
+            if(currDays <= days){
+                high = mid -1;
+            }else{
+                low = mid+1;
+            }
+        }
+        return low;
+    }
+}
