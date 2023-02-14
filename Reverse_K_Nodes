@@ -1,0 +1,53 @@
+//TimeComplexity.      O(nk)
+//SpaceComplexity.     O(1)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        int i = 0;
+        ListNode begin = dummy;
+
+        while(head != null){
+            i++;
+
+            if(i%k == 0){
+                begin = reverseNode(begin, head.next);
+                head = begin.next;
+            }else{
+                head = head.next;
+            }
+        }
+        return dummy.next;
+    }
+
+    public ListNode reverseNode(ListNode begin,  ListNode End){
+        ListNode prev = begin;
+        ListNode curr = begin.next;
+        ListNode first = curr;
+        ListNode fast = curr.next;
+
+        while(fast != End){
+            curr.next = prev;
+            prev = curr;
+            curr = fast;
+            fast = fast.next;
+        }
+        curr.next = prev;
+        begin.next = curr;
+        first.next = End;
+        return first;
+    }
+}
