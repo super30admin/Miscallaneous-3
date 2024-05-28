@@ -1,51 +1,60 @@
 #
-# @lc app=leetcode id=911 lang=python3
+# @lc app=leetcode id=25 lang=python3
 #
-# [911] Online Election
+# [25] Reverse Nodes in k-Group
 #
+
 # @lc code=start
 '''
-Time Complexity - O(log n).
-Space Complexity - O(n)
+Time Complexity - O(n)
+Space Complexity - O(1)
 
-Works on leetcode
+Works on Leetcode
 '''
-class TopVotedCandidate:
-
-    def __init__(self, persons: List[int], times: List[int]):
-        self.leader = 0
-        self.countMap = {}
-        self.leaderMap = {}
-        self.time = times
-        for i in range(len(persons)):
-            p = persons[i]
-            t = times[i]
-            #store the number of votes for each candidate
-            self.countMap[p] = self.countMap.get(p,0)+1
-            #check if the current candidate has received more votes than leader, in that case the candidate become leader
-            if self.countMap[p] >= self.countMap.get(self.leader):
-                self.leader = p
-            #store the leader at that time
-            self.leaderMap[t] = self.leader
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
+        cnt = 0
+        #We need a dummy node to point to head node
+        dummy = ListNode(-1)
+        dummy.next = head
+        #We also need a pointer to indicate the current node
+        curr = dummy
+        begin = dummy #this will be the start node of group
+        while curr.next!=None:
+            #we continue until we do traverse k nodes 
+            cnt+=1
+            curr = curr.next
+            if cnt%k==0:
+                #When we cover k nodes we reverse the Linked List of k-nodes retianing the position of the node before the group and after the group
+                begin = self.reverse(begin, curr.next)
+                #We need one node before the actual start node of the group
+                curr = begin
+        return dummy.next
     
-    def q(self, t: int) -> int:
-        #if the key exits for that time return the value in the map
-        if t in self.leaderMap:
-            return self.leaderMap.get(t)
-        #else we run a binary search to get nearest time in the time array and get leader at the latest time available
-        low, high = 0, len(self.time)-1
-        while low<=high:
-            mid = low + int((high-low)/2)
-            if self.time[mid] > t:
-                high = mid - 1
-            else:
-                low = mid + 1
-        return self.leaderMap.get(self.time[high])
-        
-
-
-# Your TopVotedCandidate object will be instantiated and called as such:
-# obj = TopVotedCandidate(persons, times)
-# param_1 = obj.q(t)
+    def reverse(self, start, end):
+        #start points the node before the first node in the group
+        #end points to the node after the last node in the group 
+        prev = start
+        curr = start.next
+        fast = curr.next
+        #temp indicates first node in the group. It becomes the last after reversal and needs to point to end after reversing
+        temp = curr
+        while fast != end:
+            #reversing a linked list
+            curr.next = prev
+            prev = curr
+            curr = fast
+            fast = fast.next
+        #In the end we have to make start point to the new first i.e. the last node in the group
+        curr.next = prev
+        start.next = curr
+        #The first node in the group needs to point to the end, the end is the next node after the last node in the group
+        temp.next = fast
+        return temp
 # @lc code=end
 
