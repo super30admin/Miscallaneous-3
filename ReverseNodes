@@ -1,0 +1,37 @@
+
+T.c --> O(n)
+S.c --> O(1)
+
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode begin = dummy;
+        int i =1;
+        while(head != null){           
+           if(i%k == 0){
+            begin = recurse(begin,head.next);
+            head = begin;
+           }
+           head = head.next; 
+           i++;
+        }
+        return dummy.next;
+    }
+    public ListNode recurse(ListNode begin, ListNode end){
+        ListNode first = begin.next;
+        ListNode prev = begin;
+        ListNode curr = begin.next;
+        ListNode fast = curr.next;
+        while(fast != end){
+           curr.next = prev;
+           prev = curr;
+           curr = fast;
+           fast = fast.next; 
+        }
+        curr.next = prev;
+        first.next = end;
+        begin.next = curr;
+        return first;
+    }
+}
